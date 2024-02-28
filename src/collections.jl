@@ -137,7 +137,7 @@ function drop_collection(host::MilvusClient, collectionName::String)
     if haskey(obj, "code") && obj["code"] == 200
         return true
     else
-        throw(ErrorException("Failed to drop collection:\n\t $(obj["message"])"))
+        throw(ErrorException("ErrorException: Failed to drop collection\n\t $(obj["message"])"))
     end
 end
 

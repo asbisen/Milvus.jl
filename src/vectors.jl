@@ -2,7 +2,7 @@
 
 
 function insert( host::MilvusClient, 
-        collectionName::MilvusCollection, 
+        collection::MilvusCollection, 
         data::Vector; 
         batch_size=32 )
 
@@ -14,7 +14,7 @@ function insert( host::MilvusClient,
     inserted_keys = [] # store the keys of the inserted data
     for i in _batch(data, batch_size) # batch the data
         payload = Dict( "dbname" => host.dbname,
-                        "collectionName" => collectionName,
+                        "collectionName" => collection.collectionName,
                         "data" => i )
         response = HTTP.post(url, headers, JSON3.write(payload))
         @assert response.status == 200
@@ -27,8 +27,8 @@ function insert( host::MilvusClient,
     return inserted_keys
 end
 
-function insert( host::MilvusClient, collectionName::MilvusCollection, data::Dict)
-    insert( host, collectionName, [data])
+function insert( host::MilvusClient, collection::MilvusCollection, data::Dict)
+    insert( host, collection, [data])
 end
  
 
@@ -208,7 +208,7 @@ end
 
 
 function delete( host::MilvusClient, 
-        collectionName::MilvusCollection, 
+        collection::MilvusCollection, 
         id::Vector )
 
     url = uri(host) * "/v1/vector/delete"
@@ -217,7 +217,7 @@ function delete( host::MilvusClient,
                 "Authorization" => "Bearer $token"]
 
     payload = Dict( "dbname" => host.dbname,
-                    "collectionName" => collectionName,
+                    "collectionName" => collection.collectionName,
                     "id" => id )
 
     response = HTTP.post(url, headers, JSON3.write(payload))
